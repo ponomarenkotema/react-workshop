@@ -1,0 +1,21 @@
+{
+  "name": "react-workshop",
+  "description": "git init",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "react": "^16.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": "",
+  "author": "",
+  "license": ""
+}
