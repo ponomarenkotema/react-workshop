@@ -2,68 +2,31 @@
 
 var gulp = require('gulp');
 
+var del = require('del');
+var buildJsFiles = require('./gulp_tasks/build.js.task');
+var buildEjsFiles = require('./gulp_tasks/build.ejs.task');
+var buildLessFiles = require('./gulp_tasks/build.less.task');
+var verifyJsCode = require('./gulp_tasks/jshint.task');
+var copyBootstrap = require('./gulp_tasks/copy.bootstrap.styles.task');
+var runIntegrationTests = require('./gulp_tasks/run.integration.tests.task');
 
-var componentsTask = require('./gulp_tasks/components');
-var concatAllTask = require('./gulp_tasks/concat.all');
-var jshintTask = require('./gulp_tasks/jshint');
-var lessTask = require('./gulp_tasks/less.task');
-var ejsTask = require('./gulp_tasks/ejs.templates');
+gulp.task('verifyJsCode', verifyJsCode);
+gulp.task('buildJsFiles', buildJsFiles);
+gulp.task('buildEjsFiles', buildEjsFiles);
+gulp.task('copyBootstrap', copyBootstrap);
+gulp.task('buildLessFiles', buildLessFiles);
+gulp.task('tests', runIntegrationTests);
+gulp.task('cleanWebappDir', function () { return del(['webapp/']); });
+gulp.task('concatAll', ['buildJsFiles', 'buildEjsFiles', 'buildLessFiles']);
+gulp.task('default', ['cleanWebappDir', 'verifyJsCode', 'concatAll', 'copyBootstrap']);
 
+gulp.task('watch', ['default'], function() {
 
+  gulp.watch(['assets/js/**/*.jsx'], ['buildJsFiles']);
+  gulp.watch(['assets/js/**/*.js'], ['buildJsFiles']);
+  gulp.watch(['templates/*.ejs'], ['buildEjsFiles']);
+  gulp.watch(['assets/css/**/*.{less,css}'], ['buildLessFiles']);
 
-gulp.task('componentsTask', componentsTask);
-gulp.task('concatAllTask', ['ejsTask', 'componentsTask'], concatAllTask);
-gulp.task('concatAllComponents', ['componentsTask'], concatAllTask);
-
-
-gulp.task('lessTask', lessTask);
-gulp.task('jshintTask', jshintTask);
-gulp.task('ejsTask', ejsTask);
-
-gulp.task('default', ['jshintTask', 'concatAll', 'lessTask', 'copyfonts', 'copyimgs', 'copylib', 'copycss']);
-gulp.task('concatAll', ['componentsTask', 'concatAllTask']);
-gulp.task('rebuildJSX', ['componentsTask', 'concatAllTask']);
-
-
-gulp.task('watch', ['default'], function () {
   // start server for testing
-  require('./app');
-
-  gulp.watch(['assets/js/**/*.jsx'], ['concatAllComponents']);
-  gulp.watch(['assets/js/**/*.js', 'messages/**/*.js'], ['concatAll']);
-  gulp.watch(['assets/css/**/*.{less,css}'], ['lessTask']);
-  gulp.watch(['templates/*.ejs'], ['ejsTask']);
-});
-
-
-gulp.task('copyfonts', function () {
-  gulp.src('assets/fonts/**/*.{ttf,woff,eof,svg,eot}')
-    .pipe(gulp.dest('../webapp/assets/fonts'));
-
-  // copy ubuntu fonts
-  gulp.src('bower_components/ubuntu-fontface/fonts/**/*.{ttf,woff,woff2,eof,svg,eot}')
-    .pipe(gulp.dest('../webapp/assets/fonts'));
-
-  // copy bootstrap fonts
-  gulp.src('bower_components/bootstrap/fonts/**/*.{ttf,woff,woff2,eof,svg,eot}')
-    .pipe(gulp.dest('../webapp/assets/fonts'));
-
-  // copy material icons fonts
-  gulp.src('bower_components/bootstrap-material-design-icons/fonts/**/*.{ttf,woff,woff2,eof,svg,eot}')
-    .pipe(gulp.dest('../webapp/assets/fonts'));
-
-  // copy react widgets fonts
-  gulp.src('node_modules/react-widgets/lib/fonts/**/*.{ttf,woff,woff2,eof,svg,eot}')
-    .pipe(gulp.dest('../webapp/assets/fonts'));
-});
-
-gulp.task('copyimgs', function () {
-  gulp.src('assets/img/**/*.{png,gif,jpg,mp4,ogv,webm}')
-    .pipe(gulp.dest('../webapp/assets/img'));
-});
-
-gulp.task('copycss', function () {
-  // copy material icons css
-  gulp.src('bower_components/bootstrap-material-design-icons/css/**/*.css')
-    .pipe(gulp.dest('../webapp/assets/css'));
+  require('./server');
 });

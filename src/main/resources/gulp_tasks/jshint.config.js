@@ -1,0 +1,45 @@
+var config = {
+  qunit:true,
+  node:true,
+  browserify:true,
+  bitwise: true,
+  browser: true,
+  curly: true,
+  eqeqeq: true,
+  evil: true,
+  forin: true,
+  immed: true,
+  latedef: true,
+  newcap: true,
+  regexdash: true,
+  smarttabs: true,
+  strict: true,
+  sub: true,
+  trailing: true,
+  undef: true,
+  wsh: true,
+  devel:true,
+  nonew: true,
+  unused: false,
+  camelcase:true,
+  noempty: true,
+  maxcomplexity: 6,
+  freeze:true,
+  maxstatements: 10,
+  maxdepth: 2,
+  maxparams:4,
+  shadow: 'outer',
+  esnext:true,
+    globals: {
+      require: false,
+      Backbone: false,
+      moment: false,
+      _:false,
+      Storage: false,
+      React: false,
+      $: false
+    }
+};
+
+module.exports = config;
+
